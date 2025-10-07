@@ -1,83 +1,73 @@
+Stellar Burgers — UI tests (Selenium + pytest)
 
-# UI‑тесты Stellar Burgers (Selenium + pytest)
+Мини-набор автотестов для учебного стенда stellarburgers.nomoreparties.site.
 
-Готовый минимально‑жизнеспособный набор автотестов под учебный стенд **stellarburgers.nomoreparties.site**.
-Покрывает регистрацию, вход (4 способа), переходы в профиль/конструктор, выход и переключение вкладок «Булки/Соусы/Начинки».
+Требования
 
-## ⚙️ Требования
-- Python 3.10+
-- Браузер: **Chrome** (по заданию) или **Edge**
-- Пакеты: `selenium`, `webdriver-manager`, `pytest`
+Python 3.10+
 
-## 🚀 Установка
-```powershell
-# в корне проекта
-pip install -U -r requirements.txt
-```
+Браузер: Chrome (по заданию) или Edge
 
-## ▶️ Запуск
+Библиотеки: selenium, webdriver-manager, pytest
+
+Установка
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+
+Запуск
+
 Chrome (по умолчанию):
-```powershell
+
 pytest -q
-```
+
 
 Edge:
-```powershell
+
 $env:SB_BROWSER="edge"; pytest -q
-```
-> Браузер и URL задаются переменными окружения:
-- `SB_BROWSER`: `chrome` (дефолт) или `edge`
-- `SB_URL`: по умолчанию `https://stellarburgers.nomoreparties.site`
+
+
+Переменные окружения:
+
+SB_BROWSER: chrome | edge (по умолчанию chrome)
+
+SB_URL: базовый URL стенда (по умолчанию https://stellarburgers.nomoreparties.site)
 
 Примеры:
-```powershell
-# запустить только авторизационные тесты
+
 pytest -q tests/test_auth.py
-
-# запустить по ключевому слову
 pytest -q -k login
-
-# подробный вывод
 pytest -vv
-```
 
-## 🧭 Структура
-```
-stellarburgers_ui_tests/
-  conftest.py          # фикстура driver (Chrome/Edge), BASE_URL и выбор браузера
-  locators.py          # локаторы элементов UI
-  utils/
-    generators.py      # генераторы email/паролей (уникальные учётки для регистр.)
-  tests/
-    test_auth.py               # регистрация + 4 способа входа
-    test_profile_and_nav.py    # профиль, конструктор, логотип, выход
-    test_constructor_tabs.py   # вкладки «Булки/Соусы/Начинки»
-  docs/
-    TESTPLAN.md        # соответствие кейсам из задания
-    LOCATORS.md        # справочник локаторов с пояснениями
-  scripts/
-    run_chrome.ps1     # запуск в Chrome
-    run_edge.ps1       # запуск в Edge
-  requirements.txt
-  pytest.ini
-  .gitignore
-  README.md
-```
+Структура проекта
+conftest.py           # фикстура driver, выбор браузера, BASE_URL
+locators.py           # локаторы элементов
+utils/
+  generators.py       # генераторы email/паролей
+tests/
+  test_auth.py                # регистрация + 4 способа входа
+  test_profile_and_nav.py     # профиль, конструктор, логотип, выход
+  test_constructor_tabs.py    # вкладки «Булки/Соусы/Начинки»
+docs/
+  TESTPLAN.md         # соответствие кейсам из задания
+  LOCATORS.md         # справочник локаторов
 
-## ❗️ Заметки по стабильности
-- Локаторы привязаны к **видимому тексту** и лейблам форм (менее хрупко, чем к классам).  
-- В тестах используются **явные ожидания** `WebDriverWait` + `EC.*`, чтобы избежать гонок.  
-- Если билд стенда отличается (другой текст на кнопке и т.п.) — правим `locators.py` точечно.
+Покрытие
 
-## 🤝 Как обновить локаторы
-Правьте только `locators.py`. Тесты ничего не знают о конкретных XPath — зависят от констант.
+Регистрация: успешная и ошибка при коротком пароле (<6)
 
-## 🧪 Что покрыто (коротко)
-- Регистрация (успех) и ошибка для короткого пароля (<6)
-- Вход: главная, «Личный кабинет», из регистрации, из восстановления
-- Переход в профиль; возврат в конструктор кнопкой и по логотипу
-- Выход из аккаунта
-- Вкладки «Булки/Соусы/Начинки»
-Подробно см. `docs/TESTPLAN.md`.
+Вход: с главной, через «Личный кабинет», из регистрации, из восстановления пароля
+
+Переход в личный кабинет; возврат в конструктор (кнопкой и по логотипу)
+
+Выход из аккаунта
+
+Переключение вкладок «Булки/Соусы/Начинки»
+
+Заметки
+
+Локаторы привязаны к текстам/лейблам, используются явные ожидания WebDriverWait.
+
+Каждый тест автономен и завершает сессию браузера.
 
 Техно-примечание: стартовый PR для ревью.
