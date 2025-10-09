@@ -70,4 +70,28 @@ docs/
 
 Каждый тест автономен и завершает сессию браузера.
 
-Техно-примечание: стартовый PR для ревью.
+Закрыл замечания ревью: заменил `sleep` на `WebDriverWait`, централизовал локаторы, вынес фикстуры в `conftest.py`, добавил явный `assert` для переключения вкладок (устойчиво к aria-selected/классу), вынес вспомогательные сценарии в `helpers/`, добавил `config.py` с переменными окружения.
+
+---
+
+## Что изменилось
+- `tests/test_constructor_tabs.py`: добавлен **явный assert** после ожидания; проверяется активность **контейнера** таба (ancestor с `role="tab"` или класс `...current...`), а не `span`.
+- `locators.py`: локаторы централизованы; тесты больше не хранят селекторы внутри.
+- `conftest.py`: только фикстуры и инициализация драйвера (без хардкода URL).
+- `helpers/driver_factory.py`, `helpers/auth.py`, `helpers/ui.py`: вынесены хелперы (логин/навигация/ожидания/фабрика драйвера).
+- `config.py`: BASE_URL/BROWSER и таймауты, поддержка переменных окружения (`SB_BROWSER`, `SB_URL`, `SB_CHROMEDRIVER_PATH`, `SB_EDGEDRIVER_PATH`).
+- `tests/test_auth.py`, `tests/test_profile_and_nav.py`: убраны `sleep`, добавлены явные ожидания/ассерты, лёгкая чистка нейминга.
+
+---
+
+## Как запустить проверку локально (Windows/PowerShell)
+```powershell
+python -m venv .venv
+.\.venv\Scripts\pip install -r requirements.txt
+
+$env:SB_BROWSER = "edge"            # или "chrome"
+$env:SB_URL = "https://stellarburgers.nomoreparties.site"
+
+.\.venv\Scripts\pytest -q
+# точечно:
+.\.venv\Scripts\pytest tests/test_constructor_tabs.py::TestConstructorTabs::test_tab_switch -vv -s
