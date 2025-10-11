@@ -1,0 +1,22 @@
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.build/
+dist/
+.eggs/
+*.egg-info/
+.cache/
+
+# pytest
+.cache/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+msedgedriver.exe
+chromedriver.exe
